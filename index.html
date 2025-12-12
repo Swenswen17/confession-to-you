@@ -18,22 +18,17 @@ body {
     border-radius: 10px;
     box-shadow: 0 0 10px #ddd;
 }
-input, textarea {
+textarea, button {
     width: 100%;
     padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
     margin-bottom: 10px;
+    border-radius: 6px;
 }
 button {
-    width: 100%;
-    padding: 13px;
-    margin-top: 10px;
     border: none;
     background: #ff4fa3;
     color: white;
     font-weight: bold;
-    border-radius: 8px;
     cursor: pointer;
 }
 </style>
@@ -52,11 +47,13 @@ button {
 
 <script>
 function generateLinks() {
-    const ids = document.getElementById("productIds").value.split("\n").map(id => id.trim()).filter(id => id !== "");
+    const ids = document.getElementById("productIds").value
+        .split("\n")
+        .map(id => id.trim())
+        .filter(id => id !== "");
     const base = "https://www.shein.com/ph/ark/";
-    const out = document.getElementById("output");
     const links = ids.map(id => base + id);
-    out.value = links.join("\n");
+    document.getElementById("output").value = links.join("\n");
 }
 
 function copyLinks() {
