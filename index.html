@@ -2,22 +2,78 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Link Generator</title>
+<title>Shein Link Generator</title>
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        background: #ffe6f2;
-        text-align: center;
-        padding: 30px;
-    }
-    .card {
-        background: white;
-        padding: 20px;
-        width: 350px;
-        margin: auto;
-        border-radius: 10px;
-        box-shadow: 0 0 10px #ddd;
-    }
-    button {
-        width: 100%;
-        padding: 13px
+body {
+    font-family: Arial, sans-serif;
+    background: #ffe6f2;
+    text-align: center;
+    padding: 30px;
+}
+.card {
+    background: white;
+    padding: 20px;
+    width: 400px;
+    margin: auto;
+    border-radius: 10px;
+    box-shadow: 0 0 10px #ddd;
+}
+input, textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin-bottom: 10px;
+}
+button {
+    width: 100%;
+    padding: 13px;
+    margin-top: 10px;
+    border: none;
+    background: #ff4fa3;
+    color: white;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+}
+</style>
+</head>
+<body>
+<div class="card">
+<h2>Shein Link Generator</h2>
+<label>Paste Shein product IDs (one per line):</label>
+<textarea id="productIds" rows="6" placeholder="e.g. 59yj2bceliq4"></textarea>
+<button onclick="generateLinks()">Generate Links</button>
+<button onclick="copyLinks()">Copy Links</button>
+<button onclick="downloadCSV()">Download CSV</button>
+<label>Generated links:</label>
+<textarea id="output" rows="8"></textarea>
+</div>
+
+<script>
+function generateLinks() {
+    const ids = document.getElementById("productIds").value.split("\n").map(id => id.trim()).filter(id => id !== "");
+    const base = "https://www.shein.com/ph/ark/";
+    const out = document.getElementById("output");
+    const links = ids.map(id => base + id);
+    out.value = links.join("\n");
+}
+
+function copyLinks() {
+    const out = document.getElementById("output");
+    out.select();
+    document.execCommand("copy");
+    alert("Copied!");
+}
+
+function downloadCSV() {
+    const out = document.getElementById("output").value;
+    const blob = new Blob([out.replace(/\n/g, ",")], { type: "text/csv" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "shein-links.csv";
+    link.click();
+}
+</script>
+</body>
+</html>
