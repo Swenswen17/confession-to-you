@@ -129,6 +129,8 @@ a:hover { text-decoration:underline; }
 
 <h3>Replies Received:</h3>
 <div id="replyList"></div>
+<p id="updatedLinkMsg"></p>
+<button id="copyUpdatedBtn" style="display:none;" onclick="copyUpdatedLink()">Copy Updated Link</button>
 </div>
 
 <script>
@@ -171,7 +173,7 @@ function loadConfession(){
   if(dataParam){
     confessionData = JSON.parse(decodeURIComponent(dataParam));
 
-    // Merge with any existing replies in localStorage
+    // Merge with any existing replies in localStorage (optional)
     let savedConf = localStorage.getItem('confession');
     if(savedConf){
       savedConf = JSON.parse(savedConf);
@@ -203,7 +205,23 @@ function submitReply(){
   document.getElementById('replyName').value=''; 
   document.getElementById('replyMessage').value='';
   document.getElementById('replyMsg').innerText='Reply submitted!';
+
   displayReplies();
+
+  // Generate updated link for the confessor
+  const encoded = encodeURIComponent(JSON.stringify(confessionData));
+  const updatedLink = window.location.origin + window.location.pathname + '?data=' + encoded;
+
+  document.getElementById('updatedLinkMsg').innerHTML = `Share this updated link with the original confessor to see replies: <br><a href="${updatedLink}" target="_blank">${updatedLink}</a>`;
+  const copyBtn = document.getElementById('copyUpdatedBtn');
+  copyBtn.style.display = 'inline-block';
+  copyBtn.setAttribute('data-link', updatedLink);
+}
+
+function copyUpdatedLink(){
+  const link = document.getElementById('copyUpdatedBtn').getAttribute('data-link');
+  navigator.clipboard.writeText(link).then(()=>{ alert('Updated link copied!'); })
+  .catch(()=>{ alert('Failed to copy updated link.'); });
 }
 
 function displayReplies(){
