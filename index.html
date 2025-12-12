@@ -3,159 +3,90 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bea B. 60% OFF Link Generator</title>
-
+<title>Anonymous Confessions</title>
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        background: #ffe6f2;
-        margin: 0;
-        padding: 0;
-    }
-
-    .container {
-        width: 90%;
-        max-width: 420px;
-        margin: 40px auto;
-        background: #ffffff;
-        padding: 25px;
-        border-radius: 15px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        text-align: center;
-    }
-
-    h2 {
-        color: #ff1493;
-        margin-bottom: 25px;
-        font-size: 24px;
-        font-weight: bold;
-    }
-
-    label {
-        text-align: left;
-        width: 100%;
-        display: block;
-        margin-top: 10px;
-        font-weight: bold;
-        color: #444;
-    }
-
-    input, select, textarea {
-        width: 100%;
-        padding: 14px;
-        margin-top: 10px;
-        border-radius: 10px;
-        border: 1px solid #ccc;
-        font-size: 15px;
-    }
-
-    button {
-        width: 100%;
-        padding: 14px;
-        margin-top: 15px;
-        border: none;
-        border-radius: 12px;
-        font-size: 16px;
-        background: #ff1493;
-        color: white;
-        cursor: pointer;
-        font-weight: bold;
-    }
-
-    button:hover {
-        background: #e01382;
-    }
-
-    #output {
-        margin-top: 15px;
-        resize: none;
-        height: 150px;
-    }
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to right, #ff758c, #ff7eb3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px;
+    color: #fff;
+}
+.card {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    margin-bottom: 20px;
+}
+textarea {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    resize: none;
+    font-size: 16px;
+}
+button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 10px;
+    background-color: #ff4fa3;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+h2 { text-align: center; }
+.confession {
+    background: rgba(255,255,255,0.2);
+    padding: 10px;
+    margin: 8px 0;
+    border-radius: 8px;
+    word-wrap: break-word;
+}
 </style>
 </head>
-
 <body>
-<div class="container">
-    <h2>Bea B. 60% OFF Link Generator</h2>
 
-    <label>Select Base URL</label>
-    <select id="baseUrl">
-        <option value="https://m.shein.com/ph/ark/">https://m.shein.com/ph/ark/</option>
-        <option value="https://m.shein.com/ph/arko/">https://m.shein.com/ph/arko/</option>
-        <option value="https://m.shein.com/ph/arkx/">https://m.shein.com/ph/arkx/</option>
-    </select>
+<div class="card">
+<h2>Anonymous Confession Box</h2>
+<textarea id="confessionInput" rows="4" placeholder="Write your confession..."></textarea>
+<button onclick="submitConfession()">Submit Confession</button>
+</div>
 
-    <label>Start (Allowed: 100–120)</label>
-    <input type="number" id="start" min="100" max="120" placeholder="100">
-
-    <label>End (Allowed: 100–120)</label>
-    <input type="number" id="end" min="100" max="120" placeholder="120">
-
-    <label>Separator</label>
-    <select id="separator">
-        <option value="\n">New line</option>
-        <option value=", ">Comma</option>
-        <option value=" ">Space</option>
-    </select>
-
-    <button onclick="generateLinks()">Generate Links</button>
-    <button onclick="copyLinks()">Copy Links</button>
-    <button onclick="downloadCSV()">Download CSV</button>
-
-    <textarea id="output" placeholder="Generated links will appear here..."></textarea>
+<div class="card">
+<h2>Confessions</h2>
+<div id="confessionList"></div>
 </div>
 
 <script>
-function generateLinks() {
-    let base = document.getElementById("baseUrl").value;
-    let start = parseInt(document.getElementById("start").value);
-    let end = parseInt(document.getElementById("end").value);
-    let separator = document.getElementById("separator").value;
+// Load confessions from LocalStorage
+let confessions = JSON.parse(localStorage.getItem("confessions") || "[]");
 
-    if (isNaN(start) || isNaN(end)) {
-        alert("Please enter both start and end values.");
-        return;
-    }
-
-    if (start < 100 || end > 120) {
-        alert("Range allowed is only from 100 to 120.");
-        return;
-    }
-
-    if (start > end) {
-        alert("Start must be less than or equal to End.");
-        return;
-    }
-
-    let output = [];
-    for (let i = start; i <= end; i++) {
-        output.push(base + i);
-    }
-
-    document.getElementById("output").value = output.join(separator);
+function renderConfessions() {
+    const list = document.getElementById("confessionList");
+    list.innerHTML = confessions.map(c => `<div class="confession">💬 ${c}</div>`).join("");
 }
 
-function copyLinks() {
-    let text = document.getElementById("output");
-    text.select();
-    navigator.clipboard.writeText(text.value)
-        .then(() => alert("Links copied!"));
-}
-
-function downloadCSV() {
-    let text = document.getElementById("output").value;
-    if (!text.trim()) {
-        alert("Generate links first.");
-        return;
+// Submit a new confession
+function submitConfession() {
+    const input = document.getElementById("confessionInput").value.trim();
+    if(input) {
+        confessions.unshift(input); // add to top like NGL
+        localStorage.setItem("confessions", JSON.stringify(confessions));
+        document.getElementById("confessionInput").value = "";
+        renderConfessions();
     }
-
-    let csvContent = "data:text/csv;charset=utf-8," + text.replace(/\n/g, "\r\n");
-
-    let link = document.createElement("a");
-    link.href = encodeURI(csvContent);
-    link.download = "shein_links.csv";
-    link.click();
 }
+
+// Initial render
+renderConfessions();
 </script>
 
 </body>
