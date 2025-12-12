@@ -85,8 +85,11 @@
         <option value="https://m.shein.com/ph/arkx/">https://m.shein.com/ph/arkx/</option>
     </select>
 
-    <label>Enter range</label>
-    <input type="text" id="rangeInput" placeholder="e.g. 100000 - 120000">
+    <label>Start (Allowed: 100–120)</label>
+    <input type="number" id="start" min="100" max="120" placeholder="100">
+
+    <label>End (Allowed: 100–120)</label>
+    <input type="number" id="end" min="100" max="120" placeholder="120">
 
     <label>Separator</label>
     <select id="separator">
@@ -105,17 +108,22 @@
 <script>
 function generateLinks() {
     let base = document.getElementById("baseUrl").value;
-    let range = document.getElementById("rangeInput").value;
+    let start = parseInt(document.getElementById("start").value);
+    let end = parseInt(document.getElementById("end").value);
     let separator = document.getElementById("separator").value;
 
-    if (!range.includes("-")) {
-        alert("Enter a valid range (e.g. 100000 - 120000)");
+    if (isNaN(start) || isNaN(end)) {
+        alert("Please enter both start and end values.");
         return;
     }
 
-    let [start, end] = range.split("-").map(n => parseInt(n.trim()));
-    if (isNaN(start) || isNaN(end)) {
-        alert("Invalid range numbers.");
+    if (start < 100 || end > 120) {
+        alert("Range allowed is only from 100 to 120.");
+        return;
+    }
+
+    if (start > end) {
+        alert("Start must be less than or equal to End.");
         return;
     }
 
@@ -130,15 +138,12 @@ function generateLinks() {
 function copyLinks() {
     let text = document.getElementById("output");
     text.select();
-    text.setSelectionRange(0, 99999);
-
     navigator.clipboard.writeText(text.value)
         .then(() => alert("Links copied!"));
 }
 
 function downloadCSV() {
     let text = document.getElementById("output").value;
-
     if (!text.trim()) {
         alert("Generate links first.");
         return;
