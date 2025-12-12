@@ -79,14 +79,18 @@ a:hover { text-decoration:underline; }
 </audio>
 <button id="musicBtn" onclick="toggleMusic()">🎵</button>
 
+<!-- Welcome Card -->
 <div class="card" id="welcomeCard">
   <h2>Hi there! 👋</h2>
   <p>
-    Are you shy or “torpe”? Confess anonymously! 💖
+    Are you shy or “torpe”? This website is made just for you! 💖<br><br>
+    Confess your feelings to your loved one anonymously by sending them a special link using your spare Facebook account. You can even add a YouTube song that reminds you of them—but it’s optional.<br><br>
+    Always remember: confessing face-to-face is much better. This website is just a little help if you’re too shy to do it in person. 💌
   </p>
   <button onclick="startConfession()">Continue</button>
 </div>
 
+<!-- Confession Form -->
 <div class="card" id="confessCard" style="display:none;">
 <h2>Write Your Confession 💖</h2>
 <input type="text" id="boyName" placeholder="Your Name">
@@ -108,6 +112,7 @@ a:hover { text-decoration:underline; }
 <button id="copyBtn" style="display:none;" onclick="copyLink()">Copy Link</button>
 </div>
 
+<!-- View Confession and Reply -->
 <div class="card" id="viewCard" style="display:none;">
 <h2>Confession 💌</h2>
 <p><strong id="confessToName"></strong> (<span id="confessTypeDisplay"></span>)</p>
@@ -173,7 +178,7 @@ function loadConfession(){
   if(dataParam){
     confessionData = JSON.parse(decodeURIComponent(dataParam));
 
-    // Merge with any existing replies in localStorage (optional)
+    // Merge with existing localStorage replies if any
     let savedConf = localStorage.getItem('confession');
     if(savedConf){
       savedConf = JSON.parse(savedConf);
@@ -208,7 +213,7 @@ function submitReply(){
 
   displayReplies();
 
-  // Generate updated link for the confessor
+  // Generate updated link for confessor
   const encoded = encodeURIComponent(JSON.stringify(confessionData));
   const updatedLink = window.location.origin + window.location.pathname + '?data=' + encoded;
 
